@@ -9,16 +9,14 @@ public static class SceneController {
 
     private static Dictionary<string, string> parameters;
 
-    public static void Load(string sceneName, Dictionary<string, string> parameters = null)
+    public static void Load(string sceneName)
     {
-        SceneController.parameters = parameters;
         SceneManager.LoadScene(sceneName);
     }
 
     public static void Load(string sceneName, string paramKey, string paramValue)
     {
-        SceneController.parameters = new Dictionary<string, string>();
-        SceneController.parameters.Add(paramKey, paramValue);
+        setParam(paramKey, paramValue);
         SceneManager.LoadScene(sceneName);
     }
 
@@ -29,14 +27,20 @@ public static class SceneController {
 
     public static string getParam(string paramKey)
     {
-        if (parameters == null) return "";
+        if (parameters == null || !parameters.ContainsKey(paramKey)) {
+            return "";
+        } 
         return parameters[paramKey];
     }
 
     public static void setParam(string paramKey, string paramValue)
     {
-        if (parameters == null)
+        if (parameters == null) {
             SceneController.parameters = new Dictionary<string, string>();
+        }
+        if (parameters.ContainsKey(paramKey)) {
+            parameters.Remove(paramKey);
+        }
         SceneController.parameters.Add(paramKey, paramValue);
     }
 
