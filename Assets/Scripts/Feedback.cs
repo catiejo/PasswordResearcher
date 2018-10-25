@@ -17,7 +17,7 @@ public class Feedback : MonoBehaviour {
         if (isFinished) {
             sessionOverText.gameObject.SetActive(true);
             nextButton.interactable = false;
-            nextButton.GetComponent<Text>().text = "Thank You.";
+            nextButton.GetComponentInChildren<Text>().text = "Thank You.";
         }
 	}
 
