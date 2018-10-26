@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class SessionManager : MonoBehaviour {
     public PasswordController passController;
+    public Toggle passwordMasking;
+
     public static Attempt CurrentAttempt { get; private set; }
     public static bool passwordsRemaining;
+    public static bool passwordIsMasked;
 
 
     private static List<Attempt> sessionAttempts;
@@ -101,6 +104,7 @@ public class SessionManager : MonoBehaviour {
         attemptNumber = 0;
         passwordsRemaining = true;
         SceneController.Load("Login Screen");
+        passwordIsMasked = passwordMasking.isOn;
     }
 
 }

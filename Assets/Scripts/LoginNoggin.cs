@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class LoginNoggin : MonoBehaviour {
     public Image pwImage;
+    public Text emptyPasswordErrorText;
+    public InputField passwordField;
 
     private float timeElapsed;
 
@@ -12,14 +14,25 @@ public class LoginNoggin : MonoBehaviour {
         timeElapsed = 0.0f;
         SessionManager.StartNextAttempt();
         pwImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
-	}
-	
-	void Update () {
+        // TODO: password masking in admin and logins
+        //if (SessionManager.passwordIsMasked) {
+        //    passwordField.contentType = InputField.ContentType.Password;
+        //} else {
+        //    passwordField.contentType = InputField.ContentType.Standard;
+        //}
+    }
+
+    void Update () {
         timeElapsed += Time.deltaTime;
 	}
 
     public void OnPasswordSubmitted(Text enteredPassword)
     {
+        // don't accept empty passwords.
+        if (enteredPassword.text == "") {
+            emptyPasswordErrorText.gameObject.SetActive(true);
+            return;
+        }
         // check if this is the last attempt
         string isFinished = SessionManager.passwordsRemaining ? "false" : "true";
         SceneController.setParam("isFinished", isFinished);

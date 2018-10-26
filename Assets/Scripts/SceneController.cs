@@ -9,6 +9,10 @@ public static class SceneController {
 
     private static Dictionary<string, string> parameters;
 
+    public static string GetActiveSceneName() {
+        return SceneManager.GetActiveScene().name;
+    }
+
     public static void Load(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
