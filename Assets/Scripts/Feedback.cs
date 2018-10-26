@@ -10,10 +10,19 @@ public class Feedback : MonoBehaviour {
     public Text sessionOverText;
 
 	void Start () {
+        if (SessionManager.CurrentAttempt != null) {
+            EmailSender.SendEmailWithAttempt(SessionManager.CurrentAttempt.ToString());
+            pwImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
+        }
         bool isFinished = SceneController.getParam("isFinished") == "true";
         bool isCorrect = SceneController.getParam("isCorrect") == "true";
-        feedbackText.text += isCorrect ? "correct!" : "incorrect.";
-        pwImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
+        if (isCorrect) {
+            feedbackText.text += "correct!";
+            feedbackText.color = Color.green;
+        } else {
+            feedbackText.text += "incorrect";
+            feedbackText.color = Color.red;
+        }
         if (isFinished) {
             sessionOverText.gameObject.SetActive(true);
             nextButton.interactable = false;
