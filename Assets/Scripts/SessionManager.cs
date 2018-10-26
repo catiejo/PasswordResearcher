@@ -39,7 +39,7 @@ public class SessionManager : MonoBehaviour {
         if (attemptNumber > sessionAttempts.Count)
         {
             CurrentAttempt = null;
-            Debug.LogError("Trying ot make an attempt out of bounds");
+            Debug.LogError("Trying to make an attempt out of bounds");
         }
         else
         {
