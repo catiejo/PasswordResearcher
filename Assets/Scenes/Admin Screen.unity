@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 55622764}
   - component: {fileID: 55622763}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Start Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -853,6 +853,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c61fa33ce5f42138010bf080462266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &826305969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 826305970}
+  - component: {fileID: 826305972}
+  - component: {fileID: 826305971}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &826305970
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 826305969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1482286085}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &826305971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 826305969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Email Session
+
+'
+--- !u!222 &826305972
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 826305969}
+  m_CullTransparentMesh: 0
 --- !u!1 &952036427
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,18 +1032,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c04e9b82abc44ee8b9c9154504957c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typicalPasswords:
-  - expected: P@sswordRes3archer
-    pwSprite: {fileID: 21300000, guid: 431f82ecd42674dbeb42ba7215de1ce7, type: 3}
-    type: 0
-  randomPasswords:
-  - expected: c8EdcukRvs#s
-    pwSprite: {fileID: 21300000, guid: 5ab141cdf9c4749759f5a781ce738615, type: 3}
-    type: 2
-  passPhrases:
-  - expected: I like password research.
-    pwSprite: {fileID: 21300000, guid: f74c11fdbc0cf466ba3be30a5f550810, type: 3}
-    type: 1
+  typicalPasswordSprites:
+  - {fileID: 21300000, guid: bc9edbe108c5f48fdba7288635c49ffe, type: 3}
+  - {fileID: 21300000, guid: e69c624a95db64e3aa5a437371302eb5, type: 3}
+  - {fileID: 21300000, guid: fab3d44fcbe584326932aef441fa67ff, type: 3}
+  - {fileID: 21300000, guid: 4bcfdfad0305e4047806151d64cb1167, type: 3}
+  - {fileID: 21300000, guid: 9fdfb14a1da64492898349476f2a2b8e, type: 3}
+  - {fileID: 21300000, guid: dc003538e93d54d65add07c8a1a5eb60, type: 3}
+  - {fileID: 21300000, guid: e1532ae516c6b42d9878ad1780e41500, type: 3}
+  - {fileID: 21300000, guid: 759bac1638d8945b09a1b70624ba0052, type: 3}
+  - {fileID: 21300000, guid: 481542362d4bc430fb54f529589826f5, type: 3}
+  - {fileID: 21300000, guid: 5dc65fc0e8b1f4dd6919ad06908623ba, type: 3}
+  randomPasswordSprites:
+  - {fileID: 21300000, guid: ddb8ec8f591514bbfb30e34731f60d22, type: 3}
+  - {fileID: 21300000, guid: 175b57e8284204b5db7cab7d91f29109, type: 3}
+  - {fileID: 21300000, guid: 4399f4001acfe4f7586273ef85d88df7, type: 3}
+  - {fileID: 21300000, guid: 78564652a3b5848b7b2d68bf27752e49, type: 3}
+  - {fileID: 21300000, guid: eafc7b9fe7e494e85bd275cf4d301bac, type: 3}
+  - {fileID: 21300000, guid: 4d984e6fdbd5245f3aee6af59bd65e77, type: 3}
+  - {fileID: 21300000, guid: 3af70e74b520241e3b2ea756eb5183c6, type: 3}
+  - {fileID: 21300000, guid: 0a687d0c07a674e77b9c19131e192020, type: 3}
+  - {fileID: 21300000, guid: baea9ac10ffcd48a1ae7633a6173bf25, type: 3}
+  - {fileID: 21300000, guid: 49cd37f181da647d4a1070b565d78aa1, type: 3}
+  passPhraseSprites:
+  - {fileID: 21300000, guid: 1061e11e1b10b42d0b9cde4ab63a29c9, type: 3}
+  - {fileID: 21300000, guid: 6a3067ebdec994212ab352bb5dec2870, type: 3}
+  - {fileID: 21300000, guid: 47a803294ff554551aebbfe892317924, type: 3}
+  - {fileID: 21300000, guid: d86432217c225451f9db066155dfb664, type: 3}
+  - {fileID: 21300000, guid: 515fc235564be43a781492a9a1e31a0d, type: 3}
+  - {fileID: 21300000, guid: 31ae7552e8546436bbaf5b7c948b6f82, type: 3}
+  - {fileID: 21300000, guid: 094249d8e81e142ffb9dad49705f40f9, type: 3}
+  - {fileID: 21300000, guid: f42a6af4e7c1149aaa4c51b868a4f319, type: 3}
+  - {fileID: 21300000, guid: 9d5e96bc4114e412791aec6aa659d0cb, type: 3}
+  - {fileID: 21300000, guid: 747fc0e78c4344b92bca147084e70f57, type: 3}
 --- !u!4 &1035908524
 Transform:
   m_ObjectHideFlags: 0
@@ -980,6 +1078,129 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1482286084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1482286085}
+  - component: {fileID: 1482286088}
+  - component: {fileID: 1482286087}
+  - component: {fileID: 1482286086}
+  m_Layer: 5
+  m_Name: Email Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1482286085
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482286084}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 826305970}
+  m_Father: {fileID: 1910403898}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 1, y: 1}
+--- !u!114 &1482286086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482286084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1482286087}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1985352}
+        m_MethodName: EmailEntireSession
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1482286087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482286084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.53333336, g: 0.6297843, b: 0.7921569, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1482286088
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482286084}
+  m_CullTransparentMesh: 0
 --- !u!1 &1603854452
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,6 +1494,7 @@ RectTransform:
   - {fileID: 1603854453}
   - {fileID: 55622762}
   - {fileID: 169165827}
+  - {fileID: 1482286085}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
