@@ -27,46 +27,20 @@ public class PasswordController : MonoBehaviour {
     public Sprite[] randomPasswordSprites;
     public Sprite[] passPhraseSprites;
 
-    private List<Password> typicalPasswords;
-    private List<Password> randomPasswords;
-    private List<Password> passPhrases;
-
-    // Doing this on Awake instead of Start to avoid potential synchronicity problems
-    private void Awake()
-    {
-        typicalPasswords = new List<Password>();
-        foreach (Sprite typ in typicalPasswordSprites)
-        {
-            typicalPasswords.Add(new Password(typ, typ.name, PassType.Typical));
-        }
-
-        randomPasswords = new List<Password>();
-        foreach (Sprite r in randomPasswordSprites)
-        {
-            randomPasswords.Add(new Password(r, r.name, PassType.Random));
-        }
-
-        passPhrases = new List<Password>();
-        foreach (Sprite pp in typicalPasswordSprites)
-        {
-            passPhrases.Add(new Password(pp, pp.name, PassType.Phrase));
-        }
-    }
-
     public Password GetRandomPassword(PassType type) {
-        Password p = new Password();
+        Sprite s = typicalPasswordSprites[0]; //Placeholder value
         switch (type) {
             case PassType.Typical:
-                p = typicalPasswords[Random.Range(0, typicalPasswords.Count)];
+                s = typicalPasswordSprites[Random.Range(0, typicalPasswordSprites.Length)];
                 break;
             case PassType.Phrase:
-                p = passPhrases[Random.Range(0, passPhrases.Count)];
+                s = passPhraseSprites[Random.Range(0, passPhraseSprites.Length)];
                 break;
             case PassType.Random:
-                p = randomPasswords[Random.Range(0, randomPasswords.Count)];
+                s = randomPasswordSprites[Random.Range(0, randomPasswordSprites.Length)];
                 break;
         }
-        return p;
+        return new Password(s, s.name, type);
     }
 
 }
