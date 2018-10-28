@@ -6,6 +6,7 @@ public class Attempt {
     public Password password;
     public string enteredPassword;
     public float timeElapsed;
+    public float timeToReview;
     public int totalAttemptNumber;
     public int typeAttemptNumber;
     public string participantID;
@@ -14,7 +15,8 @@ public class Attempt {
         this.password = pw;
         this.participantID = id;
         this.enteredPassword = "";
-        this.timeElapsed = 0.0f;
+        this.timeElapsed = -1.0f;
+        this.timeToReview = -1.0f;
     }
 
     public void SetAttemptNumbers(int total, int type) {
@@ -22,16 +24,23 @@ public class Attempt {
         this.totalAttemptNumber = total;
     }
 
-    public void FinishAttempt(float time, string pw) {
-        this.timeElapsed = time;
+    public void FinishAttempt(float timeToType, float timeToReview, string pw) {
+        this.timeElapsed = timeToType;
+        this.timeToReview = timeToReview;
         this.enteredPassword = pw;
     }
 
     public override string ToString()
     {
-        string s = password.type.ToString() + " Attempt " + typeAttemptNumber + " of 5, " + totalAttemptNumber + " of 15. ";
-        s += "Expected: '" + password.expected + "', Actual: '" + enteredPassword + "'\n";
-        s += "ID: " + participantID + ". Time to Enter: " + timeElapsed;
+        string s = "";
+        s += participantID + ", ";
+        s += password.type.ToString() + ", ";
+        s += password.expected + ", ";
+        s += enteredPassword + ", ";
+        s += typeAttemptNumber + ", ";
+        s += totalAttemptNumber + ", ";
+        s += timeElapsed + ", ";
+        s += timeToReview + ", ";
         return s;
     }
 }

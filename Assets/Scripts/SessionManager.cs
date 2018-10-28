@@ -7,6 +7,7 @@ public class SessionManager : MonoBehaviour {
     public PasswordController passController;
     public Toggle passwordMasking;
 
+    public static List<int> attemptsWithoutWifi;
     public static Attempt CurrentAttempt { get; private set; }
     public static bool passwordsRemaining;
     public static bool passwordIsMasked;
@@ -18,15 +19,17 @@ public class SessionManager : MonoBehaviour {
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+        attemptsWithoutWifi = new List<int>();
     }
 
     /// <summary>
     /// Finishes the attempt.
     /// </summary>
-    /// <param name="timeElapsed">Time taken to enter the password.</param>
+    /// <param name="timeToType">Time taken to enter the password.</param>
+    /// <param name="timeToReview">Time taken between last keypress and pressing the login.</param>
     /// <param name="enteredPassword">Entered password.</param>
-    public static void FinishAttempt(float timeElapsed, string enteredPassword) {
-        sessionAttempts[attemptNumber - 1].FinishAttempt(timeElapsed, enteredPassword);
+    public static void FinishAttempt(float timeToType, float timeToReview, string enteredPassword) {
+        sessionAttempts[attemptNumber - 1].FinishAttempt(timeToType, timeToReview, enteredPassword);
         Debug.Log(sessionAttempts[attemptNumber - 1].ToString());
     }
 
@@ -98,13 +101,27 @@ public class SessionManager : MonoBehaviour {
             totalCounter++;
             Debug.Log(a.ToString());
         }
-        if (totalCounter != sessionAttempts.Count + 1 || typicalCounter != 6 || randomCounter != 6 || phraseCounter != 6) {
+        if (totalCounter != sessionAttempts.Count + 1 || typicalCounter != 6 || randomCounter != 6 || phraseCounter != 6)
+        {
             Debug.LogError("Holy schnitzel, porky pants! There aren't enough of each password type!");
         }
         attemptNumber = 0;
         passwordsRemaining = true;
         SceneController.Load("Login Screen");
         passwordIsMasked = passwordMasking.isOn;
+    }
+
+    /// <summary>
+    /// Email the entire session at once. They are also emailed incrementally. 
+    /// </summary>
+    public void EmailEntireSession() {
+        string subject = "Session with " + sessionAttempts[0].participantID;
+        string entireSession = "Participant, PW Type, Expected PW, Actual PW, Type Attempt Number, Total Attempt Number, Time To Enter, Time To Review\n";
+        foreach (Attempt a in sessionAttempts) {
+            entireSession += a.ToString();
+            entireSession += '\n';
+        }
+        EmailSender.SendEmail(subject, entireSession);
     }
 
 }

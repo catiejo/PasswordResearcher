@@ -5,23 +5,27 @@ using UnityEngine.UI;
 
 public class Feedback : MonoBehaviour {
     public Text feedbackText;
-    public Image pwImage;
+    public Image passwordImage;
     public Button nextButton;
     public Text sessionOverText;
+    public Color correctColor;
+    public Color incorrectColor;
 
-	void Start () {
+    void Start () {
         if (SessionManager.CurrentAttempt != null) {
-            EmailSender.SendEmailWithAttempt(SessionManager.CurrentAttempt.ToString());
-            pwImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
+            if (Application.internetReachability != NetworkReachability.NotReachable) {
+                string emailSubject = "Attempt " + SessionManager.CurrentAttempt.totalAttemptNumber + " for " + SessionManager.CurrentAttempt.participantID;
+                EmailSender.SendEmail(emailSubject, SessionManager.CurrentAttempt.ToString());
+            }
         }
         bool isFinished = SceneController.getParam("isFinished") == "true";
         bool isCorrect = SceneController.getParam("isCorrect") == "true";
         if (isCorrect) {
             feedbackText.text += "correct!";
-            feedbackText.color = Color.green;
+            feedbackText.color = correctColor;
         } else {
-            feedbackText.text += "incorrect";
-            feedbackText.color = Color.red;
+            feedbackText.text += "incorrect.";
+            feedbackText.color = incorrectColor;
         }
         if (isFinished) {
             sessionOverText.gameObject.SetActive(true);

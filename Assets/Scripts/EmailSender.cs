@@ -9,14 +9,15 @@ using System.Security.Cryptography.X509Certificates;
 public class EmailSender
 {
 
-    public static void SendEmailWithAttempt(string attempt)
+    public static void SendEmail(string subject, string body)
     {
+        //check if previous attempts have been sent and send those if not.
         MailMessage mail = new MailMessage();
 
         mail.From = new MailAddress("zhaw.eva2@gmail.com");
         mail.To.Add("pide@zhaw.ch");
-        mail.Subject = "Test Mail";
-        mail.Body = attempt;
+        mail.Subject = subject;
+        mail.Body = body;
 
         SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
         smtpServer.Port = 587;

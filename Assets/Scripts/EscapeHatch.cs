@@ -23,10 +23,14 @@ public class EscapeHatch : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             heldTime = 0.0f;
         }
         if (heldTime >= heldThreshold) {
-            SceneController.setParam("PreviousScreen", SceneController.GetActiveSceneName());
-            SceneController.Load("Admin Screen");
+            OpenAdminArea();
         }
 
+    }
+
+    public static void OpenAdminArea() {
+        SceneController.setParam("PreviousScreen", SceneController.GetActiveSceneName());
+        SceneController.Load("Admin Screen");
     }
 
     public void OnPointerDown(PointerEventData eventData)
