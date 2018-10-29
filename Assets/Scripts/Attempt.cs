@@ -38,14 +38,14 @@ public class Attempt {
     public override string ToString()
     {
         string s = "";
-        s += participantID + ", ";
-        s += password.type.ToString() + ", ";
-        s += password.expected + ", ";
-        s += enteredPassword + ", ";
-        s += typeAttemptNumber + ", ";
-        s += totalAttemptNumber + ", ";
-        s += timeElapsed + ", ";
-        s += timeToReview + ", ";
+        s += participantID + ",";
+        s += password.type.ToString() + ",";
+        s += password.expected + ",";
+        s += enteredPassword + ",";
+        s += typeAttemptNumber + ",";
+        s += totalAttemptNumber + ",";
+        s += timeElapsed + ",";
+        s += timeToReview;
         return s;
     }
 }
