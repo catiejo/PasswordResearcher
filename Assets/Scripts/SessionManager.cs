@@ -26,8 +26,8 @@ public class SessionManager : MonoBehaviour {
     /// <param name="timeToType">Time taken to enter the password.</param>
     /// <param name="timeToReview">Time taken between last keypress and pressing the login.</param>
     /// <param name="enteredPassword">Entered password.</param>
-    public static void FinishAttempt(float timeToType, float timeToReview, string enteredPassword) {
-        sessionAttempts[attemptNumber - 1].FinishAttempt(timeToType, timeToReview, enteredPassword);
+    public static void FinishAttempt(int numBackspaces, float timeStart, float timeStop, float timeDone, string enteredPassword) {
+        sessionAttempts[attemptNumber - 1].FinishAttempt(numBackspaces, timeStart, timeStop, timeDone, enteredPassword);
         Debug.Log(sessionAttempts[attemptNumber - 1].ToString());
     }
 
@@ -60,11 +60,12 @@ public class SessionManager : MonoBehaviour {
         Password phrase = passController.GetRandomPassword(PassType.Phrase);
         // create a list of 15 attempts
         sessionAttempts = new List<Attempt>();
+        string maskedStatus = PasswordsAreMasked ? "Masked" : "Unmasked";
         for (int i = 0; i < 5; i++)
         {
-            sessionAttempts.Add(new Attempt(typical, participant.text));
-            sessionAttempts.Add(new Attempt(random, participant.text));
-            sessionAttempts.Add(new Attempt(phrase, participant.text));
+            sessionAttempts.Add(new Attempt(typical, participant.text, maskedStatus));
+            sessionAttempts.Add(new Attempt(random, participant.text, maskedStatus));
+            sessionAttempts.Add(new Attempt(phrase, participant.text, maskedStatus));
         }
         // shuffle the attempts in a random order
         for (int i = 0; i < sessionAttempts.Count; i++)
@@ -137,7 +138,7 @@ public class SessionManager : MonoBehaviour {
     }
 
     public static string GetSessionAsCsvString() {
-        string csv = "Participant, PW Type, Expected PW, Actual PW, Type Attempt Number, Total Attempt Number, Time To Enter, Time To Review\n";
+        string csv = "Participant,OS,Num Backspaces,PW Type,Expected PW,Actual PW,Type Attempt Number,Total Attempt Number,Time Start,Time End,Time Done\n";
         foreach (Attempt a in sessionAttempts)
         {
             csv += a.ToString();
