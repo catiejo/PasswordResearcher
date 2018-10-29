@@ -154,6 +154,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.ZHAW.PasswordResearcher
     Standalone: com.Company.ProductName
+    iOS: com.ZHAW.PasswordResearcher
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
@@ -642,6 +643,7 @@ PlayerSettings:
   scriptingRuntimeVersion: 0
   apiCompatibilityLevelPerPlatform:
     Android: 1
+    iOS: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template_2D
