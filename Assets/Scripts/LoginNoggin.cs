@@ -53,7 +53,7 @@ public class LoginNoggin : MonoBehaviour
 #if UNITY_IOS
         // iOS input apparently doesn't even register with Input.inputString,
         // so I use the keyboard text property instead.
-        if (keyboard != null)
+        if (keyboard != null && keyboard.text != EnteredPassword)
         {
             EnteredPassword = keyboard.text;
             if (typingStarted >= 0.0f)
