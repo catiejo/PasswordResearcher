@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,11 +8,9 @@ public class SessionManager : MonoBehaviour {
     public PasswordController passController;
     public Toggle passwordMasking;
 
-    public static List<int> attemptsWithoutWifi;
     public static Attempt CurrentAttempt { get; private set; }
-    public static bool passwordsRemaining;
-    public static bool passwordIsMasked;
-
+    public static bool PasswordsRemaining { get; private set; }
+    public static bool PasswordsAreMasked { get; private set; }
 
     private static List<Attempt> sessionAttempts;
     private static int attemptNumber;
@@ -19,7 +18,6 @@ public class SessionManager : MonoBehaviour {
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        attemptsWithoutWifi = new List<int>();
     }
 
     /// <summary>
@@ -38,7 +36,7 @@ public class SessionManager : MonoBehaviour {
     /// </summary>
     public static void StartNextAttempt() {
         attemptNumber++;
-        passwordsRemaining = attemptNumber < sessionAttempts.Count;
+        PasswordsRemaining = attemptNumber < sessionAttempts.Count;
         if (attemptNumber > sessionAttempts.Count)
         {
             CurrentAttempt = null;
@@ -72,7 +70,7 @@ public class SessionManager : MonoBehaviour {
         for (int i = 0; i < sessionAttempts.Count; i++)
         {
             Attempt temp = sessionAttempts[i];
-            int rando = Random.Range(i, sessionAttempts.Count);
+            int rando = UnityEngine.Random.Range(i, sessionAttempts.Count);
             sessionAttempts[i] = sessionAttempts[rando];
             sessionAttempts[rando] = temp;
         }
@@ -99,29 +97,53 @@ public class SessionManager : MonoBehaviour {
                     break;
             }
             totalCounter++;
-            Debug.Log(a.ToString());
         }
         if (totalCounter != sessionAttempts.Count + 1 || typicalCounter != 6 || randomCounter != 6 || phraseCounter != 6)
         {
-            Debug.LogError("Holy schnitzel, porky pants! There aren't enough of each password type!");
+            Debug.LogError("This experiment is set up to have 3 passwords 5 times, so a total of 15 passwords. Something's amiss...");
         }
         attemptNumber = 0;
-        passwordsRemaining = true;
-        SceneController.Load("Login Screen");
-        passwordIsMasked = passwordMasking.isOn;
+        PasswordsRemaining = true;
+        SceneManagerWithParameters.Load("Login Screen");
+        PasswordsAreMasked = passwordMasking.isOn;
     }
 
     /// <summary>
     /// Email the entire session at once. They are also emailed incrementally. 
     /// </summary>
-    public void EmailEntireSession() {
-        string subject = "Session with " + sessionAttempts[0].participantID;
-        string entireSession = "Participant, PW Type, Expected PW, Actual PW, Type Attempt Number, Total Attempt Number, Time To Enter, Time To Review\n";
-        foreach (Attempt a in sessionAttempts) {
-            entireSession += a.ToString();
-            entireSession += '\n';
+    public static void EmailEntireSession() {
+        // TODO: this could have a bool return for success/failure, but then it
+        // can't be used as a click handler...
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            return;
         }
-        EmailSender.SendEmail(subject, entireSession);
+        string subject = "Session with " + sessionAttempts[0].participantID;
+        string body = GetSessionAsCsvString();
+        try
+        {
+            EmailSender.SendEmail(subject, body);
+        } catch (Exception e) 
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Wrapper method for static method so it can be used as a click-handler.
+    /// </summary>
+    public void EmailEntireSessionClickHandler() {
+        EmailEntireSession();
+    }
+
+    public static string GetSessionAsCsvString() {
+        string csv = "Participant, PW Type, Expected PW, Actual PW, Type Attempt Number, Total Attempt Number, Time To Enter, Time To Review\n";
+        foreach (Attempt a in sessionAttempts)
+        {
+            csv += a.ToString();
+            csv += '\n';
+        }
+        return csv;
     }
 
 }

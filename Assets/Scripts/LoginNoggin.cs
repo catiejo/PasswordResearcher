@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginNoggin : MonoBehaviour {
+public class LoginNoggin : MonoBehaviour
+{
     public Image passwordImage;
     public Text infoText;
     public InputField passwordField;
@@ -15,7 +16,23 @@ public class LoginNoggin : MonoBehaviour {
     private TouchScreenKeyboard keyboard;
     private bool doneWasClicked;
 
-    void Start () {
+    void Start()
+    {
+#if UNITY_IOS
+        // on iPhone, I can't seem to get the keyboard to display masked characters unless
+        // the field is specifically marked as a password...here's a HACK/workaround.
+        if (SessionManager.PasswordsAreMasked)
+        {
+            passwordField.contentType = InputField.ContentType.Password;
+        }
+        else
+        {
+            // General > Keyboards: enable english or German depending on which they prefer
+            // Turn off all settings exvept capslock.
+            // Also turn off autofill (Passwords & Accounts > Autofill Passwords)
+            passwordField.contentType = InputField.ContentType.Standard;
+        }
+#endif
         // initializing variables...
         doneWasClicked = false;
         EnteredPassword = "";
@@ -23,12 +40,34 @@ public class LoginNoggin : MonoBehaviour {
         typingStarted = -1.0f; // -1 so there's no confusion that it's uninitialized.
         typingStopped = -1.0f;
         SessionManager.StartNextAttempt();
-        passwordImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
+        if (SessionManager.CurrentAttempt != null)
+        {
+            passwordImage.sprite = SessionManager.CurrentAttempt.password.pwSprite;
+        } 
         DisplayKeyboard();
     }
 
-    void Update () {
+    void Update()
+    {
         timeElapsed += Time.deltaTime;
+#if UNITY_IOS
+        // iOS input apparently doesn't even register with Input.inputString,
+        // so I use the keyboard text property instead.
+        if (keyboard != null)
+        {
+            EnteredPassword = keyboard.text;
+            if (typingStarted >= 0.0f)
+            {
+                typingStopped = timeElapsed;
+            }
+            else
+            {
+                typingStarted = timeElapsed;
+                typingStopped = timeElapsed;
+            }
+        }
+#endif
+#if UNITY_ANDROID
         // On Android, the inputstring is either the entire string or the empty string.
         // This differs from the docs that say it should only be the letter(s) entered
         // in the current frame.
@@ -43,6 +82,9 @@ public class LoginNoggin : MonoBehaviour {
                 typingStopped = timeElapsed;
             }
         }
+#endif
+        // Make sure they keyboard is always visible, or process the password
+        // if the user clicks "enter" or "ok"
         if (keyboard != null)
         {
             switch (keyboard.status)
@@ -61,13 +103,14 @@ public class LoginNoggin : MonoBehaviour {
     }
 
     /// <summary>
-    /// Places focus on Password Input. The keyboard appears automatically. 
-    /// This is in a separate function so it can be  used as a click handler 
-    /// in the inspector.
+    /// Places focus on Password Input and gets a reference to the current
+    /// keyboard. The passwordField is off-screen, and the built-in keyboard
+    /// text field that hovers above the keyboard is used instead so it looks
+    /// more natural.
     /// </summary>
     public void DisplayKeyboard() {
         doneWasClicked = false;
-        keyboard = TouchScreenKeyboard.Open(EnteredPassword, TouchScreenKeyboardType.Default, false, false, SessionManager.passwordIsMasked, false, "type the password here");
+        keyboard = TouchScreenKeyboard.Open(EnteredPassword, TouchScreenKeyboardType.Default, false, false, SessionManager.PasswordsAreMasked, false, "type the password here");
         passwordField.ActivateInputField();
     }
 
@@ -82,18 +125,18 @@ public class LoginNoggin : MonoBehaviour {
         doneWasClicked = true;
         if (EnteredPassword == "")
         {
+            // HACK -- see function description.
             StartCoroutine(WaitAndDisplayKeybaord());
             return;
         }
         // non-empty password was entered...finish the attempt
         SessionManager.FinishAttempt(typingStopped - typingStarted, timeElapsed - typingStopped, EnteredPassword);
         // set parameters for next scene
-        string isFinished = SessionManager.passwordsRemaining ? "false" : "true";
+        string isFinished = SessionManager.PasswordsRemaining ? "false" : "true";
         string isCorrect = (EnteredPassword == SessionManager.CurrentAttempt.password.expected) ? "true" : "false";
-        SceneController.setParam("isFinished", isFinished);
-        SceneController.setParam("isCorrect", isCorrect);
-        SceneController.Load("Feedback Screen");
-
+        SceneManagerWithParameters.SetParam("isFinished", isFinished);
+        SceneManagerWithParameters.SetParam("isCorrect", isCorrect);
+        SceneManagerWithParameters.Load("Feedback Screen");
     }
 
     /// <summary>

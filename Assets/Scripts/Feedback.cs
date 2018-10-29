@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Feedback : MonoBehaviour {
+public class Feedback : MonoBehaviour
+{
     public Text feedbackText;
     public Image passwordImage;
     public Button nextButton;
@@ -11,30 +13,45 @@ public class Feedback : MonoBehaviour {
     public Color correctColor;
     public Color incorrectColor;
 
-    void Start () {
-        if (SessionManager.CurrentAttempt != null) {
-            if (Application.internetReachability != NetworkReachability.NotReachable) {
-                string emailSubject = "Attempt " + SessionManager.CurrentAttempt.totalAttemptNumber + " for " + SessionManager.CurrentAttempt.participantID;
-                EmailSender.SendEmail(emailSubject, SessionManager.CurrentAttempt.ToString());
-            }
-        }
-        bool isFinished = SceneController.getParam("isFinished") == "true";
-        bool isCorrect = SceneController.getParam("isCorrect") == "true";
-        if (isCorrect) {
+    private bool emailAttempted;
+    private bool isFinished;
+    private bool isCorrect;
+
+    void Start()
+    {
+        emailAttempted = false;
+        isFinished = SceneManagerWithParameters.GetParam("isFinished") == "true";
+        isCorrect = SceneManagerWithParameters.GetParam("isCorrect") == "true";
+        if (isCorrect)
+        {
             feedbackText.text += "correct!";
             feedbackText.color = correctColor;
-        } else {
+        }
+        else
+        {
             feedbackText.text += "incorrect.";
             feedbackText.color = incorrectColor;
         }
-        if (isFinished) {
+        if (isFinished)
+        {
             sessionOverText.gameObject.SetActive(true);
             nextButton.interactable = false;
             nextButton.GetComponentInChildren<Text>().text = "Thank You.";
         }
-	}
+    }
+
+    void Update()
+    {
+        // Called in update instead of start so that the screen loads even if
+        // the email takes awhile to send (slow network connectivity, etc)
+        if (isFinished && !emailAttempted)
+        {
+            emailAttempted = true; //only try once...you can retry from Admin if you want.
+            SessionManager.EmailEntireSession();
+        }
+    }
 
     public void OnNextClicked() {
-        SceneController.Load("Login Screen");
+        SceneManagerWithParameters.Load("Login Screen");
     }
 }

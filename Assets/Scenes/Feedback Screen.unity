@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 55622764}
   - component: {fileID: 55622763}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Next Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 591827283}
   - component: {fileID: 591827282}
   m_Layer: 5
-  m_Name: EscapeHatch
+  m_Name: EscapeHatch (Admin Area Access)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

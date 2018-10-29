@@ -29,8 +29,8 @@ public class EscapeHatch : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     public static void OpenAdminArea() {
-        SceneController.setParam("PreviousScreen", SceneController.GetActiveSceneName());
-        SceneController.Load("Admin Screen");
+        SceneManagerWithParameters.SetParam("PreviousScreen", SceneManagerWithParameters.GetActiveSceneName());
+        SceneManagerWithParameters.Load("Admin Screen");
     }
 
     public void OnPointerDown(PointerEventData eventData)

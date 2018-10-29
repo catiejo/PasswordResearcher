@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Attempt {
+    //TODO: these should be get, private set.
     public Password password;
     public string enteredPassword;
     public float timeElapsed;
@@ -30,6 +31,10 @@ public class Attempt {
         this.enteredPassword = pw;
     }
 
+    /// <summary>
+    /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Attempt"/> in CSV format.
+    /// </summary>
+    /// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Attempt"/> in CSV format.</returns>
     public override string ToString()
     {
         string s = "";

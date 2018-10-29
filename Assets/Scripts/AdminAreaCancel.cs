@@ -6,12 +6,12 @@ public class AdminAreaCancel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (SceneController.getParam("PreviousScreen") == "") {
+        if (SceneManagerWithParameters.GetParam("PreviousScreen") == "") {
             this.gameObject.SetActive(false);
         }
 		
 	}
     public void GoBackToPreviousScreen() {
-        SceneController.Load(SceneController.getParam("PreviousScreen"));
+        SceneManagerWithParameters.Load(SceneManagerWithParameters.GetParam("PreviousScreen"));
     }	
 }
