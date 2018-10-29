@@ -15,6 +15,7 @@ public class LoginNoggin : MonoBehaviour
     private float typingStopped;
     private TouchScreenKeyboard keyboard;
     private bool doneWasClicked;
+    private int numBackspacesForCurrentAttempt;
 
     void Start()
     {
@@ -34,6 +35,7 @@ public class LoginNoggin : MonoBehaviour
         }
 #endif
         // initializing variables...
+        numBackspacesForCurrentAttempt = 0;
         doneWasClicked = false;
         EnteredPassword = "";
         timeElapsed = 0.0f;
@@ -50,11 +52,13 @@ public class LoginNoggin : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
-#if UNITY_IOS
-        // iOS input apparently doesn't even register with Input.inputString,
-        // so I use the keyboard text property instead.
         if (keyboard != null && keyboard.text != EnteredPassword)
         {
+            // Check if backspace was used.
+            if (EnteredPassword.Length > keyboard.text.Length)
+            {
+                numBackspacesForCurrentAttempt++;
+            }
             EnteredPassword = keyboard.text;
             if (typingStarted >= 0.0f)
             {
@@ -66,23 +70,6 @@ public class LoginNoggin : MonoBehaviour
                 typingStopped = timeElapsed;
             }
         }
-#endif
-#if UNITY_ANDROID
-        // On Android, the inputstring is either the entire string or the empty string.
-        // This differs from the docs that say it should only be the letter(s) entered
-        // in the current frame.
-        if (Input.inputString.Length > 0)
-        {
-            EnteredPassword = Input.inputString;
-            // Get the time stamp of first and last character typed.
-            if (typingStarted >= 0.0f) {
-                typingStopped = timeElapsed;
-            } else {
-                typingStarted = timeElapsed;
-                typingStopped = timeElapsed;
-            }
-        }
-#endif
         // Make sure they keyboard is always visible, or process the password
         // if the user clicks "enter" or "ok"
         if (keyboard != null)
@@ -130,7 +117,7 @@ public class LoginNoggin : MonoBehaviour
             return;
         }
         // non-empty password was entered...finish the attempt
-        SessionManager.FinishAttempt(typingStopped - typingStarted, timeElapsed - typingStopped, EnteredPassword);
+        SessionManager.FinishAttempt(numBackspacesForCurrentAttempt, typingStarted, typingStopped,  timeElapsed, EnteredPassword);
         // set parameters for next scene
         string isFinished = SessionManager.PasswordsRemaining ? "false" : "true";
         string isCorrect = (EnteredPassword == SessionManager.CurrentAttempt.password.expected) ? "true" : "false";
