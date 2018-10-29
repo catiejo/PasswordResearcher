@@ -6,18 +6,25 @@ public class Attempt {
     //TODO: these should be get, private set.
     public Password password;
     public string enteredPassword;
-    public float timeElapsed;
-    public float timeToReview;
+    public float timeStartedTyping;
+    public float timeStoppedTyping;
+    public float timePressedDone;
     public int totalAttemptNumber;
     public int typeAttemptNumber;
     public string participantID;
+    public string maskedStatus;
+    public int numberOfBackspaces;
+    public string deviceType;
 
-    public Attempt(Password pw, string id) {
+    public Attempt(Password pw, string id, string masked) {
         this.password = pw;
         this.participantID = id;
         this.enteredPassword = "";
-        this.timeElapsed = -1.0f;
-        this.timeToReview = -1.0f;
+        this.timeStartedTyping = -1.0f;
+        this.timeStoppedTyping = -1.0f;
+        this.timePressedDone = -1.0f;
+        this.deviceType = Application.platform.ToString();
+        this.maskedStatus = masked;
     }
 
     public void SetAttemptNumbers(int total, int type) {
@@ -25,10 +32,12 @@ public class Attempt {
         this.totalAttemptNumber = total;
     }
 
-    public void FinishAttempt(float timeToType, float timeToReview, string pw) {
-        this.timeElapsed = timeToType;
-        this.timeToReview = timeToReview;
+    public void FinishAttempt(int numBackspaces, float timeStart, float timeStop, float timeDone, string pw) {
+        this.timeStartedTyping = timeStart;
+        this.timeStoppedTyping = timeStop;
+        this.timePressedDone = timeDone;
         this.enteredPassword = pw;
+        this.numberOfBackspaces = numBackspaces;
     }
 
     /// <summary>
@@ -39,13 +48,16 @@ public class Attempt {
     {
         string s = "";
         s += participantID + ",";
+        s += deviceType + ",";
+        s += numberOfBackspaces + ",";
         s += password.type.ToString() + ",";
         s += password.expected + ",";
         s += enteredPassword + ",";
         s += typeAttemptNumber + ",";
         s += totalAttemptNumber + ",";
-        s += timeElapsed + ",";
-        s += timeToReview;
+        s += timeStartedTyping + ",";
+        s += timeStoppedTyping + ",";
+        s += timePressedDone;
         return s;
     }
 }
