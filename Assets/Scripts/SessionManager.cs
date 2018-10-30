@@ -8,6 +8,7 @@ public class SessionManager : MonoBehaviour {
     public PasswordController passController;
     public Toggle passwordMasking;
     public int numberOfPasswordsFromEachCategory;
+    public int numberOfAttemptsForEachPassword;
 
     public static Attempt CurrentAttempt { get; private set; }
     public static bool PasswordsRemaining { get; private set; }
@@ -67,9 +68,9 @@ public class SessionManager : MonoBehaviour {
         passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Typical, numberOfPasswordsFromEachCategory));
         passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Random, numberOfPasswordsFromEachCategory));
         passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Phrase, numberOfPasswordsFromEachCategory));
-        // Generate list of numberOfPasswordsFromEachCategory x 5 Attempts
+        // Generate list of numberOfPasswordsFromEachCategory x numberOfAttemptsForEachPassword
         sessionAttempts = new List<Attempt>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < numberOfAttemptsForEachPassword; i++) {
             foreach (Password p in passwordsForSession) {
                 sessionAttempts.Add(new Attempt(p, participant.text, maskedStatus));
             }

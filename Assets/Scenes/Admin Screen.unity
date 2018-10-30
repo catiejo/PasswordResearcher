@@ -156,6 +156,7 @@ MonoBehaviour:
   passController: {fileID: 1035908523}
   passwordMasking: {fileID: 169165828}
   numberOfPasswordsFromEachCategory: 2
+  numberOfAttemptsForEachPassword: 3
 --- !u!1 &55622761
 GameObject:
   m_ObjectHideFlags: 0
