@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passController: {fileID: 1035908523}
   passwordMasking: {fileID: 169165828}
+  numberOfPasswordsFromEachCategory: 2
 --- !u!1 &55622761
 GameObject:
   m_ObjectHideFlags: 0
