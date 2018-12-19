@@ -48,6 +48,7 @@ public class Attempt {
     {
         string s = "";
         s += participantID + ",";
+        s += maskedStatus + ",";
         s += deviceType + ",";
         s += numberOfBackspaces + ",";
         s += password.type.ToString() + ",";

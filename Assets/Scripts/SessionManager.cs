@@ -15,7 +15,9 @@ public class SessionManager : MonoBehaviour {
     public static bool PasswordsAreMasked { get; private set; }
 
     private static List<Attempt> sessionAttempts;
+    private static List<Attempt> secondRoundSessionAttempts;
     private static int attemptNumber;
+    private static string firstRoundCSV;
 
     void Start()
     {
@@ -38,16 +40,23 @@ public class SessionManager : MonoBehaviour {
     /// </summary>
     public static void StartNextAttempt() {
         attemptNumber++;
+        SceneManagerWithParameters.SetParam("Trigger Second Round", "false");
+        if (attemptNumber > sessionAttempts.Count && sessionAttempts != secondRoundSessionAttempts)
+        {
+            //CurrentAttempt = null;
+            //Debug.LogError("Trying to make an attempt out of bounds");
+            firstRoundCSV = GetSessionAsCsvString();
+            attemptNumber = 1;
+            PasswordsAreMasked = !PasswordsAreMasked;
+            sessionAttempts = secondRoundSessionAttempts;
+        } else if (attemptNumber == sessionAttempts.Count && sessionAttempts != secondRoundSessionAttempts) {
+            SceneManagerWithParameters.SetParam("Trigger Second Round", "true");
+        }
         PasswordsRemaining = attemptNumber < sessionAttempts.Count;
-        if (attemptNumber > sessionAttempts.Count)
-        {
-            CurrentAttempt = null;
-            Debug.LogError("Trying to make an attempt out of bounds");
-        }
-        else
-        {
-            CurrentAttempt = sessionAttempts[attemptNumber - 1];
-        }
+        //else
+        //{
+        CurrentAttempt = sessionAttempts[attemptNumber - 1];
+        //}
     }
 
     /// <summary>
@@ -60,19 +69,26 @@ public class SessionManager : MonoBehaviour {
         // Setup
         attemptNumber = 0;
         PasswordsRemaining = true;
-        SceneManagerWithParameters.Load("Login Screen");
         PasswordsAreMasked = passwordMasking.isOn;
         string maskedStatus = PasswordsAreMasked ? "Masked" : "Unmasked";
+        string inverseMaskedStatus = PasswordsAreMasked ? "Unmasked" : "Masked";
         // Get all the passwords!
         List<Password> passwordsForSession = new List<Password>();
-        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Typical, numberOfPasswordsFromEachCategory));
-        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Random, numberOfPasswordsFromEachCategory));
-        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Phrase, numberOfPasswordsFromEachCategory));
+        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Typical, numberOfPasswordsFromEachCategory * 2));
+        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Random, numberOfPasswordsFromEachCategory * 2));
+        passwordsForSession.AddRange(passController.GetRandomPasswords(PassType.Phrase, numberOfPasswordsFromEachCategory * 2));
         // Generate list of numberOfPasswordsFromEachCategory x numberOfAttemptsForEachPassword
         sessionAttempts = new List<Attempt>();
+        secondRoundSessionAttempts = new List<Attempt>();
         for (int i = 0; i < numberOfAttemptsForEachPassword; i++) {
+            int counter = 0;
             foreach (Password p in passwordsForSession) {
-                sessionAttempts.Add(new Attempt(p, participant.text, maskedStatus));
+                if (counter % 2 == 0) {
+                    sessionAttempts.Add(new Attempt(p, participant.text, maskedStatus));
+                } else {
+                    secondRoundSessionAttempts.Add(new Attempt(p, participant.text, inverseMaskedStatus));
+                }
+                counter++;
             }
         }
         // shuffle the attempts in a random order
@@ -83,18 +99,57 @@ public class SessionManager : MonoBehaviour {
             sessionAttempts[i] = sessionAttempts[rando];
             sessionAttempts[rando] = temp;
         }
+        for (int i = 0; i < secondRoundSessionAttempts.Count; i++)
+        {
+            Attempt temp = secondRoundSessionAttempts[i];
+            int rando = UnityEngine.Random.Range(i, secondRoundSessionAttempts.Count);
+            secondRoundSessionAttempts[i] = secondRoundSessionAttempts[rando];
+            secondRoundSessionAttempts[rando] = temp;
+        }
         // assign attempt numbers to each.
         Dictionary<string, int> attemptNumbersByPassword = new Dictionary<string, int>();
         int totalAttemptNumber = 1;
-        foreach (Attempt a in sessionAttempts) {
+        foreach (Attempt a in sessionAttempts)
+        {
             string key = a.password.expected;
-            if (!attemptNumbersByPassword.ContainsKey(key)) {
+            if (!attemptNumbersByPassword.ContainsKey(key))
+            {
                 attemptNumbersByPassword.Add(key, 1);
             }
             a.SetAttemptNumbers(totalAttemptNumber, attemptNumbersByPassword[key]);
             attemptNumbersByPassword[key] = attemptNumbersByPassword[key] + 1;
             totalAttemptNumber++;
         }
+        attemptNumbersByPassword = new Dictionary<string, int>();
+        totalAttemptNumber = 1;
+        foreach (Attempt a in secondRoundSessionAttempts)
+        {
+            string key = a.password.expected;
+            if (!attemptNumbersByPassword.ContainsKey(key))
+            {
+                attemptNumbersByPassword.Add(key, 1);
+            }
+            a.SetAttemptNumbers(totalAttemptNumber, attemptNumbersByPassword[key]);
+            attemptNumbersByPassword[key] = attemptNumbersByPassword[key] + 1;
+            totalAttemptNumber++;
+        }
+        EmailPasswords(participant.text);
+        SceneManagerWithParameters.Load("Login Screen");
+
+    }
+
+    public void EmailPasswords(string pid) {
+        string passwordsForParticipant = "";
+        foreach (Attempt a in sessionAttempts)
+        {
+            passwordsForParticipant += a.password.expected + ", " + a.maskedStatus + "\n";
+        }
+        foreach (Attempt a in secondRoundSessionAttempts)
+        {
+            passwordsForParticipant += a.password.expected + ", " + a.maskedStatus + "\n";
+        }
+        EmailSender.SendEmail("Passwords for " + pid, passwordsForParticipant);
+
     }
 
     /// <summary>
@@ -108,7 +163,8 @@ public class SessionManager : MonoBehaviour {
             return;
         }
         string subject = "Session with " + sessionAttempts[0].participantID;
-        string body = GetSessionAsCsvString();
+        string body = "Participant,Masked,OS,Num Backspaces,PW Type,Expected PW,Actual PW,Type Attempt Number,Total Attempt Number,Time Start,Time End,Time Done\n";
+        body += firstRoundCSV + GetSessionAsCsvString();
         try
         {
             EmailSender.SendEmail(subject, body);
@@ -126,7 +182,7 @@ public class SessionManager : MonoBehaviour {
     }
 
     public static string GetSessionAsCsvString() {
-        string csv = "Participant,OS,Num Backspaces,PW Type,Expected PW,Actual PW,Type Attempt Number,Total Attempt Number,Time Start,Time End,Time Done\n";
+        string csv = "";
         foreach (Attempt a in sessionAttempts)
         {
             csv += a.ToString();

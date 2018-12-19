@@ -16,12 +16,14 @@ public class Feedback : MonoBehaviour
     private bool emailAttempted;
     private bool isFinished;
     private bool isCorrect;
+    private bool isSecondRoundStarted;
 
     void Start()
     {
         emailAttempted = false;
         isFinished = SceneManagerWithParameters.GetParam("isFinished") == "true";
         isCorrect = SceneManagerWithParameters.GetParam("isCorrect") == "true";
+        isSecondRoundStarted = SceneManagerWithParameters.GetParam("Trigger Second Round") == "true";
         if (isCorrect)
         {
             feedbackText.text += "correct!";
@@ -32,7 +34,14 @@ public class Feedback : MonoBehaviour
             feedbackText.text += "incorrect.";
             feedbackText.color = incorrectColor;
         }
-        if (isFinished)
+        if (isSecondRoundStarted) {
+            sessionOverText.gameObject.SetActive(true);
+            sessionOverText.text = "The first part of the study is complete. Continue onto the next section below.";
+            nextButton.GetComponent<Image>().color = Color.cyan;
+            nextButton.GetComponentInChildren<Text>().text = "Continue";
+            isFinished = false;
+        }
+        else if (isFinished)
         {
             sessionOverText.gameObject.SetActive(true);
             nextButton.interactable = false;
